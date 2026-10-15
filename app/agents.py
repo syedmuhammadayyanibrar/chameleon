@@ -1,15 +1,18 @@
 """LangGraph nodes. Every node appends one telemetry event."""
 import asyncio
 import os
+import re
 import time
 from functools import cache
 from typing import Literal
+
+from urllib.parse import urlparse
 
 from ddgs import DDGS
 from langchain_google_genai import ChatGoogleGenerativeAI
 from pydantic import BaseModel
 
-from app.ingester import query_company
+from app.ingester import fetch_and_index_url, query_company
 from app.logic import GROUNDING_THRESHOLD, compute_grounding
 from app.state import GraphState
 
@@ -116,31 +119,6 @@ async def router(state: GraphState) -> dict:
     }
 
 
-async def support_rag(state: GraphState) -> dict:
-    t0 = time.perf_counter()
-    docs = await asyncio.to_thread(query_company, state["company_domain"], state["search_query"], 5)
-    if not docs:
-        return {
-            "retrieved_docs": [],
-            "sources": [],
-            "draft_answer": "",
-            "telemetry": [_event("support_rag", t0, ANSWER_MODEL, 0, 0, "retrieved 0 chunks")],
-        }
-    draft, tin, tout = await _text(
-        ANSWER_MODEL,
-        "You answer questions about a company using ONLY the provided context. Cite sources inline as "
-        "[Source: url] after each claim. If the context does not contain the answer, say exactly what is "
-        "missing instead of guessing. " + UNTRUSTED,
-        f"Context:\n{_ctx(docs)}\n\nQuestion: {state['query']}",
-    )
-    return {
-        "retrieved_docs": docs,
-        "sources": _sources(docs),
-        "draft_answer": draft,
-        "telemetry": [_event("support_rag", t0, ANSWER_MODEL, tin, tout, f"retrieved {len(docs)} chunks")],
-    }
-
-
 def _web(query: str, n: int) -> list[dict]:
     try:
         results = DDGS().text(query, max_results=n) or []
@@ -151,6 +129,92 @@ def _web(query: str, n: int) -> list[dict]:
         for r in results
         if r.get("href")
     ]
+
+
+async def support_rag(state: GraphState) -> dict:
+    t0 = time.perf_counter()
+    domain = state["company_domain"]
+    query = state["search_query"]
+    docs = await asyncio.to_thread(query_company, domain, query, 5)
+
+    # Option 3: JIT targeted web doc fetching if initial docs are empty or if a rewrite retry occurred
+    jit_sources = []
+    if not docs or state.get("retries", 0) > 0:
+        found_web = await asyncio.to_thread(_web, f"{domain} {query}", 4)
+        official_urls = [
+            r["source"] for r in found_web
+            if (urlparse(r.get("source", "")).hostname or "").endswith(domain)
+        ]
+        existing_sources = set(d["source"] for d in docs)
+        for u in official_urls[:2]:
+            if u not in existing_sources:
+                new_chunks = await fetch_and_index_url(domain, u)
+                if new_chunks:
+                    jit_sources.append(u)
+                    docs.extend(new_chunks[:3])
+
+    if not docs:
+        return {
+            "retrieved_docs": [],
+            "sources": [],
+            "draft_answer": "",
+            "telemetry": [_event("support_rag", t0, ANSWER_MODEL, 0, 0, "retrieved 0 chunks")],
+        }
+
+    detail = f"retrieved {len(docs)} chunks"
+    if jit_sources:
+        detail += f" (JIT fetched: {len(jit_sources)} docs)"
+
+    draft, tin, tout = await _text(
+        ANSWER_MODEL,
+        "You answer questions about a company using ONLY the provided context. Cite sources inline as "
+        "[Source: url] after each claim. If the context does not contain the answer, say exactly what is "
+        "missing instead of guessing. " + UNTRUSTED,
+        f"Context:\n{_ctx(docs)}\n\nQuestion: {state['query']}",
+    )
+
+    # If the draft indicates key technical details are missing and refers to a deep doc URL,
+    # automatically JIT-fetch that deep page and re-draft with the full technical guide
+    missing_indicators = ("missing", "does not contain", "no instructions", "refer to", "directs you to")
+    if any(ind in draft.lower() for ind in missing_indicators) and not jit_sources:
+        raw_urls = re.findall(r"https?://[^\s\)\],]+\." + re.escape(domain) + r"/[^\s\)\],]*|https?://" + re.escape(domain) + r"/[^\s\)\],]*", draft)
+        existing_sources = set(d["source"] for d in docs)
+        new_target_urls = [u.rstrip(".,)") for u in raw_urls if u.rstrip(".,)") not in existing_sources]
+
+        if not new_target_urls:
+            found_web = await asyncio.to_thread(_web, f"{domain} {query}", 4)
+            new_target_urls = [
+                r["source"] for r in found_web
+                if (urlparse(r.get("source", "")).hostname or "").endswith(domain)
+                and r.get("source", "") not in existing_sources
+            ]
+
+        fetched_more = False
+        for u_clean in new_target_urls[:2]:
+            more_chunks = await fetch_and_index_url(domain, u_clean)
+            if more_chunks:
+                docs.extend(more_chunks[:5])
+                fetched_more = True
+                jit_sources.append(u_clean)
+
+        if fetched_more:
+            draft, a, b = await _text(
+                ANSWER_MODEL,
+                "You answer questions about a company using ONLY the provided context. Cite sources inline as "
+                "[Source: url] after each claim. If the context does not contain the answer, say exactly what is "
+                "missing instead of guessing. " + UNTRUSTED,
+                f"Context:\n{_ctx(docs)}\n\nQuestion: {state['query']}",
+            )
+            tin += a
+            tout += b
+            detail += f" (JIT expanded: {len(jit_sources)} docs)"
+
+    return {
+        "retrieved_docs": docs,
+        "sources": _sources(docs),
+        "draft_answer": draft,
+        "telemetry": [_event("support_rag", t0, ANSWER_MODEL, tin, tout, detail)],
+    }
 
 
 async def competitor_intel(state: GraphState) -> dict:

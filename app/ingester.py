@@ -8,9 +8,15 @@ import chromadb
 import httpx
 from langchain_text_splitters import MarkdownHeaderTextSplitter, RecursiveCharacterTextSplitter
 
+import time
+
 MAX_PAGES = 15
 MIN_PAGE_CHARS = 200
-PRIORITY_WORDS = ["docs", "api", "pricing", "about", "guide", "features", "integrations", "quickstart", "faq"]
+PRIORITY_WORDS = [
+    "docs", "api", "pricing", "about", "guide", "features", "integrations",
+    "quickstart", "faq", "database", "postgres", "auth", "security",
+    "storage", "sql", "rls", "reference", "tutorial", "sdk", "webhook",
+]
 
 _client = None
 
@@ -37,8 +43,22 @@ def collection_name(domain: str) -> str:
 
 
 def _score(url: str) -> int:
-    u = url.lower()
-    return sum(w in u for w in PRIORITY_WORDS)
+    p = urlparse(url).path.lower()
+    kw_score = sum(w in p for w in PRIORITY_WORDS)
+    segments = [s for s in p.strip("/").split("/") if s]
+    depth_score = len(segments)
+    if depth_score <= 1 and kw_score == 0:
+        return -5
+    return kw_score * 3 + depth_score
+
+
+def _section_key(url: str) -> str:
+    parts = [s for s in urlparse(url).path.strip("/").split("/") if s]
+    if not parts:
+        return "root"
+    if parts[0] in ("docs", "documentation") and len(parts) > 1:
+        return "/".join(parts[1:3]) if len(parts) >= 3 else parts[1]
+    return "/".join(parts[:2])
 
 
 async def _get_text(client: httpx.AsyncClient, url: str) -> str:
@@ -47,6 +67,25 @@ async def _get_text(client: httpx.AsyncClient, url: str) -> str:
         return r.text if r.status_code == 200 else ""
     except httpx.HTTPError:
         return ""
+
+
+async def _llms_txt_urls(client: httpx.AsyncClient, domain: str) -> list[str]:
+    urls: list[str] = []
+    candidates = [
+        f"https://{domain}/llms.txt",
+        f"https://docs.{domain}/llms.txt",
+        f"https://{domain}/docs/llms.txt",
+    ]
+    for target in candidates:
+        text = await _get_text(client, target)
+        if text:
+            md_links = re.findall(r"\[.*?\]\((https?://[^\)\s]+)\)", text)
+            plain_links = re.findall(r"^(https?://\S+)$", text, flags=re.MULTILINE)
+            for u in md_links + plain_links:
+                u_host = urlparse(u).hostname or ""
+                if u_host.endswith(domain) and not u.endswith("/llms-full.txt"):
+                    urls.append(u)
+    return urls
 
 
 async def _sitemap_urls(client: httpx.AsyncClient, sitemap_url: str, follow_index: bool = True) -> list[str]:
@@ -63,18 +102,48 @@ async def _sitemap_urls(client: httpx.AsyncClient, sitemap_url: str, follow_inde
 async def discover_pages(domain: str, extra_urls: list[str]) -> list[str]:
     home = f"https://{domain}"
     async with httpx.AsyncClient() as client:
-        found: list[str] = []
+        llms_urls = await _llms_txt_urls(client, domain)
+        sitemap_found: list[str] = []
         for base in (domain, f"docs.{domain}"):
-            found += await _sitemap_urls(client, f"https://{base}/sitemap.xml")
-    found = [u for u in found if (urlparse(u).hostname or "").endswith(domain)]
-    found.sort(key=_score, reverse=True)
-    ordered = [home] + list(extra_urls) + found
+            sitemap_found += await _sitemap_urls(client, f"https://{base}/sitemap.xml")
+
+    valid = [u for u in sitemap_found if (urlparse(u).hostname or "").endswith(domain)]
+
+    buckets: dict[str, list[str]] = {}
+    for u in valid:
+        k = _section_key(u)
+        buckets.setdefault(k, []).append(u)
+
+    for k in buckets:
+        buckets[k].sort(key=_score, reverse=True)
+
+    balanced_sitemap: list[str] = []
+    bucket_keys = sorted(buckets.keys(), key=lambda k: max((_score(u) for u in buckets[k]), default=0), reverse=True)
+    idx = 0
+    while len(balanced_sitemap) < MAX_PAGES * 2 and any(buckets.values()):
+        for k in list(bucket_keys):
+            if buckets[k]:
+                balanced_sitemap.append(buckets[k].pop(0))
+            else:
+                if k in bucket_keys:
+                    bucket_keys.remove(k)
+        idx += 1
+        if idx > MAX_PAGES * 2:
+            break
+
+    ordered = list(extra_urls) + llms_urls + balanced_sitemap
     seen, result = set(), []
     for u in ordered:
         key = u.rstrip("/")
         if key not in seen:
             seen.add(key)
             result.append(u)
+        if len(result) >= MAX_PAGES:
+            break
+
+    if len(result) < MAX_PAGES and home.rstrip("/") not in seen:
+        result.append(home)
+
     return result[:MAX_PAGES]
 
 
@@ -111,7 +180,7 @@ def _store(domain: str, chunks: list[tuple[str, dict]]) -> None:
         _chroma().delete_collection(name)
     except Exception:  # collection did not exist
         pass
-    col = _chroma().create_collection(name, metadata={"hnsw:space": "cosine"})
+    col = _chroma().get_or_create_collection(name, metadata={"hnsw:space": "cosine"})
     for i in range(0, len(chunks), 100):
         batch = chunks[i : i + 100]
         col.add(
@@ -119,6 +188,33 @@ def _store(domain: str, chunks: list[tuple[str, dict]]) -> None:
             documents=[c[0] for c in batch],
             metadatas=[c[1] for c in batch],
         )
+
+
+def add_chunks(domain: str, chunks: list[tuple[str, dict]]) -> None:
+    if not chunks:
+        return
+    name = collection_name(domain)
+    col = _chroma().get_or_create_collection(name, metadata={"hnsw:space": "cosine"})
+    start = col.count()
+    for i in range(0, len(chunks), 100):
+        batch = chunks[i : i + 100]
+        col.add(
+            ids=[f"{name}-jit-{start + i + j}-{time.time_ns()}" for j in range(len(batch))],
+            documents=[c[0] for c in batch],
+            metadatas=[c[1] for c in batch],
+        )
+
+
+async def fetch_and_index_url(domain: str, url: str) -> list[dict]:
+    sem = asyncio.Semaphore(1)
+    async with httpx.AsyncClient() as client:
+        text = await _fetch(client, sem, url)
+    if not text:
+        return []
+    chunks = _chunk(text, url, domain)
+    if chunks:
+        await asyncio.to_thread(add_chunks, domain, chunks)
+    return [{"text": c[0], "source": c[1]["source"]} for c in chunks]
 
 
 async def ingest_company(domain: str, urls: list[str] | None = None) -> dict:
@@ -148,9 +244,12 @@ def company_exists(domain: str) -> bool:
 def query_company(domain: str, query: str, k: int = 5) -> list[dict]:
     if not company_exists(domain):
         return []
-    col = _chroma().get_collection(collection_name(domain))
-    res = col.query(query_texts=[query], n_results=k)
-    return [{"text": t, "source": m["source"]} for t, m in zip(res["documents"][0], res["metadatas"][0])]
+    try:
+        col = _chroma().get_collection(collection_name(domain))
+        res = col.query(query_texts=[query], n_results=k)
+        return [{"text": t, "source": m["source"]} for t, m in zip(res["documents"][0], res["metadatas"][0])]
+    except Exception:
+        return []
 
 
 def list_companies() -> list[dict]:

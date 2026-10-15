@@ -46,7 +46,7 @@ async def main() -> None:
     summary = {
         "answerable_correct_pct": pct(ans),
         "unanswerable_refused_pct": pct(ref),
-        "avg_retries": round(sum(x["retries"] for x in results) / len(results), 2) if results else None,
+        "avg_retries": round(sum(x.get("retries", 0) for x in results) / len(results), 2) if results else None,
     }
     print(json.dumps(summary, indent=2))
     (HERE / "results.json").write_text(json.dumps({"summary": summary, "results": results}, indent=2))

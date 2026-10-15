@@ -16,7 +16,7 @@
       "ok": true,
       "retries": 0,
       "score": 1.0,
-      "answer": "To send an email with the API, you can use the following endpoint:\n\n* **POST Send Email** [Source: https://resend.com/docs/api-reference/api-keys/create-api-key]"
+      "answer": "To send an email with the API, you can use the following methods:\n\n* **POST Send Email** [Source: https://resend.com/docs/api-reference/api-keys/update-api-key]\n* **POST Send Batch Emails** [Source: https://resend.com/docs/api-reference/api-keys/update-api-key]"
     },
     {
       "domain": "resend.com",
@@ -44,7 +44,7 @@
       "ok": true,
       "retries": 0,
       "score": 1.0,
-      "answer": "Based on the provided context, Postgres Row Level Security (RLS) gives you granular authorization rules that run inside the database [Source: https://supabase.com/docs/guides/database/postgres/row-level-security]. Grants and policies combine to control access [Source: https://supabase.com/docs/guides/database/postgres/row-level-security]."
+      "answer": "Row Level Security (RLS) works by implementing granular authorization rules that run directly inside the Postgres database, securing your data at the row level [Source: https://supabase.com/features/row-level-security, Source: https://supabase.com/docs/guides/database/postgres/row-level-security]. It controls access to individual rows based on user attributes or roles, combining grants and policies to determine access control [Source: https://supabase.com/features/row-level-security, Source: https://supabase.com/docs/guides/database/postgres/row-level-security]."
     },
     {
       "domain": "posthog.com",
@@ -58,7 +58,7 @@
       "ok": true,
       "retries": 0,
       "score": 1.0,
-      "answer": "Session replay records what real users do in your product and plays it back like a DVR, complete with a synced DevTools panel that displays console logs, network requests, and errors at the exact moment they occurred [Source: https://posthog.com/docs/session-replay]."
+      "answer": "Session replay records what real users do in your product and plays it back like a DVR [Source: https://posthog.com/docs/session-replay]. It includes a synced DevTools panel that shows console logs, network requests, and errors at the exact moment they happened [Source: https://posthog.com/docs/session-replay]."
     },
     {
       "domain": "resend.com",
@@ -77,8 +77,8 @@
       "should_refuse": true,
       "ok": true,
       "retries": 0,
-      "score": 1.0,
-      "answer": "The provided context does not contain information about Supabase's exact revenue in 2019."
+      "score": 0.0,
+      "answer": "Confidence low (0.00). Flagging a human engineer. I could not ground these points in the indexed documentation:\n- No relevant documentation was retrieved."
     }
   ]
 }
