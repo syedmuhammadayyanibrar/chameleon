@@ -46,6 +46,22 @@ async def _seed() -> None:
 
 @asynccontextmanager
 async def lifespan(_: FastAPI):
+    # Pre-warm router & grader models once at startup
+    if os.getenv("ROUTER_MODE", "ml").lower() == "ml":
+        try:
+            from app.router_ml import get_router_models
+            await asyncio.to_thread(get_router_models)
+            log.info("ML router model pre-warmed successfully")
+        except Exception as e:
+            log.warning(f"Router pre-warm warning: {e}")
+    if os.getenv("GRADER_MODE", "nli").lower() == "nli":
+        try:
+            from app.grader_nli import get_nli_model
+            await asyncio.to_thread(get_nli_model)
+            log.info("NLI grader model pre-warmed successfully")
+        except Exception as e:
+            log.warning(f"NLI grader pre-warm warning: {e}")
+
     task = asyncio.create_task(_seed())  # keep a reference so it isn't garbage-collected
     yield
     task.cancel()

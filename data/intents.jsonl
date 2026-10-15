@@ -1,0 +1,140 @@
+{"text": "How do I send an email with the API?", "label": "technical_support"}
+{"text": "What is the endpoint to create a new API key?", "label": "technical_support"}
+{"text": "How do I set up custom domain verification for DNS?", "label": "technical_support"}
+{"text": "Where do I configure SPF and DKIM records?", "label": "technical_support"}
+{"text": "How to enable Postgres Row Level Security on a table?", "label": "technical_support"}
+{"text": "What is the syntax for creating an RLS policy in SQL?", "label": "technical_support"}
+{"text": "How do I authenticate users with OAuth in Supabase?", "label": "technical_support"}
+{"text": "Can I use JWT tokens with edge functions?", "label": "technical_support"}
+{"text": "What are the rate limits for free tier API calls?", "label": "technical_support"}
+{"text": "How do I install the Python SDK via pip?", "label": "technical_support"}
+{"text": "How do I initialize the client in Node.js?", "label": "technical_support"}
+{"text": "What does error 429 Too Many Requests mean?", "label": "technical_support"}
+{"text": "How do I handle webhook retries and signatures?", "label": "technical_support"}
+{"text": "Where can I find the webhook secret in the dashboard?", "label": "technical_support"}
+{"text": "How to connect my database using Prisma ORM?", "label": "technical_support"}
+{"text": "How do I run database migrations in production?", "label": "technical_support"}
+{"text": "What is session replay and how do I enable it?", "label": "technical_support"}
+{"text": "Can I mask sensitive inputs in session recordings?", "label": "technical_support"}
+{"text": "How do I track custom events in the frontend?", "label": "technical_support"}
+{"text": "What is the payload limit for batch event ingestion?", "label": "technical_support"}
+{"text": "How do I invite team members to my organization?", "label": "technical_support"}
+{"text": "How to set up SSO with Okta or Google Workspace?", "label": "technical_support"}
+{"text": "Does it integrate with Slack for error alerts?", "label": "technical_support"}
+{"text": "How do I connect my Stripe webhook to this service?", "label": "technical_support"}
+{"text": "Can I integrate this with GitHub Actions for CI/CD?", "label": "technical_support"}
+{"text": "Does this support export to Snowflake or BigQuery?", "label": "technical_support"}
+{"text": "How to configure Datadog log streaming?", "label": "technical_support"}
+{"text": "Can I use this with Next.js App Router?", "label": "technical_support"}
+{"text": "How do I deploy this using Docker and Docker Compose?", "label": "technical_support"}
+{"text": "What ports need to be open in the firewall?", "label": "technical_support"}
+{"text": "How do I configure SSL certificates for my custom domain?", "label": "technical_support"}
+{"text": "How to upgrade my plan to the Pro tier?", "label": "technical_support"}
+{"text": "Where can I download VAT invoices and billing receipts?", "label": "technical_support"}
+{"text": "What happens if I exceed my monthly quota?", "label": "technical_support"}
+{"text": "How do I delete my project and purge all data?", "label": "technical_support"}
+{"text": "How do I configure IP allowlisting for database access?", "label": "technical_support"}
+{"text": "Can I set up read replicas for high availability?", "label": "technical_support"}
+{"text": "How does automated database backup and point-in-time recovery work?", "label": "technical_support"}
+{"text": "What is the maximum upload file size in storage buckets?", "label": "technical_support"}
+{"text": "How do I generate pre-signed upload URLs?", "label": "technical_support"}
+{"text": "How to implement pagination in GraphQL queries?", "label": "technical_support"}
+{"text": "How do I subscribe to real-time database changes over websockets?", "label": "technical_support"}
+{"text": "Why am I getting a CORS error when calling from localhost?", "label": "technical_support"}
+{"text": "How do I pass the authorization header with my bearer token?", "label": "technical_support"}
+{"text": "Can I run edge functions locally with the CLI?", "label": "technical_support"}
+{"text": "How do I configure environment variables in the CLI?", "label": "technical_support"}
+{"text": "Does this support multi-region database replication?", "label": "technical_support"}
+{"text": "How to set up email forwarding and SMTP credentials?", "label": "technical_support"}
+{"text": "Can I customize the email templates for password reset?", "label": "technical_support"}
+{"text": "How do I configure custom claims in user JWTs?", "label": "technical_support"}
+{"text": "How to debug slow queries with explain analyze?", "label": "technical_support"}
+{"text": "What is the recommended connection pooling strategy?", "label": "technical_support"}
+{"text": "How do I configure pgvector for vector search?", "label": "technical_support"}
+{"text": "Can I set up scheduled cron jobs inside the database?", "label": "technical_support"}
+{"text": "How do I monitor CPU and RAM usage in the dashboard?", "label": "technical_support"}
+{"text": "Does it integrate with Segment for user analytics?", "label": "technical_support"}
+{"text": "How do I connect Zapier to trigger actions on new rows?", "label": "technical_support"}
+{"text": "Can I use AWS S3 as an external storage backend?", "label": "technical_support"}
+{"text": "How do I configure custom headers on API responses?", "label": "technical_support"}
+{"text": "What TLS versions are supported for outbound calls?", "label": "technical_support"}
+{"text": "How to rotate my project service role key safely?", "label": "technical_support"}
+{"text": "Can I self-host this on my own Kubernetes cluster?", "label": "technical_support"}
+{"text": "How do I export my database schema to SQL files?", "label": "technical_support"}
+{"text": "How to filter events by user properties in the SDK?", "label": "technical_support"}
+{"text": "Can I set up audit logs for admin actions?", "label": "technical_support"}
+{"text": "How do I enable two-factor authentication for my account?", "label": "technical_support"}
+{"text": "What is the retention period for server logs?", "label": "technical_support"}
+{"text": "How to set up dead-letter queues for failed messages?", "label": "technical_support"}
+{"text": "Does the JavaScript SDK support TypeScript types out of the box?", "label": "technical_support"}
+{"text": "How do I configure cache-control headers on static assets?", "label": "technical_support"}
+{"text": "How does Resend compare to SendGrid?", "label": "competitor_battlecard"}
+{"text": "What are the key differences between Supabase and Firebase?", "label": "competitor_battlecard"}
+{"text": "PostHog vs Mixpanel: which one is better for product analytics?", "label": "competitor_battlecard"}
+{"text": "What are the main competitors and alternatives to this product?", "label": "competitor_battlecard"}
+{"text": "Why should I choose this platform over AWS Amplify?", "label": "competitor_battlecard"}
+{"text": "How is this company different from Mailgun and Postmark?", "label": "competitor_battlecard"}
+{"text": "What advantages does Supabase have over Google Firebase?", "label": "competitor_battlecard"}
+{"text": "Where does PostHog fall short compared to Amplitude?", "label": "competitor_battlecard"}
+{"text": "Is this tool cheaper than Datadog for monitoring?", "label": "competitor_battlecard"}
+{"text": "Compare pricing between this product and Auth0.", "label": "competitor_battlecard"}
+{"text": "What are the pros and cons of moving from Firebase to Supabase?", "label": "competitor_battlecard"}
+{"text": "How hard is it to migrate from SendGrid to Resend?", "label": "competitor_battlecard"}
+{"text": "Battlecard: Supabase vs Hasura for GraphQL and Postgres APIs.", "label": "competitor_battlecard"}
+{"text": "Who are the top market alternatives to PostHog?", "label": "competitor_battlecard"}
+{"text": "How does developer experience compare between Resend and AWS SES?", "label": "competitor_battlecard"}
+{"text": "Is Resend faster and more reliable than Mailchimp Transactional?", "label": "competitor_battlecard"}
+{"text": "Compare PostHog vs FullStory for session replay capabilities.", "label": "competitor_battlecard"}
+{"text": "Does Supabase have feature parity with PlanetScale?", "label": "competitor_battlecard"}
+{"text": "What can Firebase do that Supabase cannot do yet?", "label": "competitor_battlecard"}
+{"text": "Comparison table between this service and Segment.", "label": "competitor_battlecard"}
+{"text": "Why are developers switching from Mixpanel to PostHog?", "label": "competitor_battlecard"}
+{"text": "What are the pricing differences between Postmark and Resend?", "label": "competitor_battlecard"}
+{"text": "Compare the open source features of Supabase vs proprietary Firebase.", "label": "competitor_battlecard"}
+{"text": "Which is better for B2B SaaS: Amplitude or PostHog?", "label": "competitor_battlecard"}
+{"text": "How does this compare to Clerk for authentication?", "label": "competitor_battlecard"}
+{"text": "Supabase vs Clerk: which is better for user management?", "label": "competitor_battlecard"}
+{"text": "What are the trade-offs of self-hosting PostHog vs using Heap?", "label": "competitor_battlecard"}
+{"text": "Is Resend better suited for modern Next.js apps than SendGrid?", "label": "competitor_battlecard"}
+{"text": "Compare deliverability rates between Resend and Postmark.", "label": "competitor_battlecard"}
+{"text": "What makes Supabase different from standard RDS PostgreSQL?", "label": "competitor_battlecard"}
+{"text": "Battlecard against LaunchDarkly: how does feature flagging compare?", "label": "competitor_battlecard"}
+{"text": "Why do startups choose this over legacy enterprise tools?", "label": "competitor_battlecard"}
+{"text": "What are the competitive weaknesses of this platform?", "label": "competitor_battlecard"}
+{"text": "How does the pricing scale compared to Datadog and New Relic?", "label": "competitor_battlecard"}
+{"text": "Compare Supabase vs Neon for serverless Postgres.", "label": "competitor_battlecard"}
+{"text": "What are the best open source alternatives to Amplitude?", "label": "competitor_battlecard"}
+{"text": "How does this compare to LogRocket for frontend debugging?", "label": "competitor_battlecard"}
+{"text": "Is Supabase faster than Appwrite for backend development?", "label": "competitor_battlecard"}
+{"text": "Compare Resend vs Brevo for transactional email sending.", "label": "competitor_battlecard"}
+{"text": "What are the competitive advantages of choosing this over Twilio SendGrid?", "label": "competitor_battlecard"}
+{"text": "How does query performance compare to BigQuery for event data?", "label": "competitor_battlecard"}
+{"text": "Who wins in developer productivity: Supabase or Firebase?", "label": "competitor_battlecard"}
+{"text": "Are there any feature gaps when replacing Mixpanel with this tool?", "label": "competitor_battlecard"}
+{"text": "Compare SDK quality between Resend and Postmark.", "label": "competitor_battlecard"}
+{"text": "How does customer support compare between SendGrid and Resend?", "label": "competitor_battlecard"}
+{"text": "Is this service compliant with HIPAA compared to AWS?", "label": "competitor_battlecard"}
+{"text": "Compare total cost of ownership against self-hosted solutions.", "label": "competitor_battlecard"}
+{"text": "What are the top 3 reasons to switch away from Firebase?", "label": "competitor_battlecard"}
+{"text": "How does this stack up against Pendo for user journey tracking?", "label": "competitor_battlecard"}
+{"text": "Compare Supabase vs PocketBase for hobby and indie projects.", "label": "competitor_battlecard"}
+{"text": "Which platform provides better analytics: PostHog or Google Analytics 4?", "label": "competitor_battlecard"}
+{"text": "PostHog vs GA4: key differences for product teams.", "label": "competitor_battlecard"}
+{"text": "What are the alternatives to Resend for transactional emails in 2026?", "label": "competitor_battlecard"}
+{"text": "Why choose PostHog over Hotjar for user session recordings?", "label": "competitor_battlecard"}
+{"text": "Compare Supabase auth vs Auth0 on enterprise features.", "label": "competitor_battlecard"}
+{"text": "What are the enterprise differences between this product and Segment Personas?", "label": "competitor_battlecard"}
+{"text": "Is this tool more developer-friendly than Mailgun?", "label": "competitor_battlecard"}
+{"text": "Battlecard: Supabase vs Convex for reactive backends.", "label": "competitor_battlecard"}
+{"text": "How does pricing compare when sending over 1 million emails a month?", "label": "competitor_battlecard"}
+{"text": "What makes this different from traditional business intelligence tools like Tableau?", "label": "competitor_battlecard"}
+{"text": "Compare Supabase vs Back4App for mobile app backends.", "label": "competitor_battlecard"}
+{"text": "Which has better documentation: Resend or SendGrid?", "label": "competitor_battlecard"}
+{"text": "How does this compare against Statsig for A/B testing and experimentation?", "label": "competitor_battlecard"}
+{"text": "Why should an engineering team switch from Mixpanel to this platform?", "label": "competitor_battlecard"}
+{"text": "Compare security and compliance between Supabase and AWS Aurora.", "label": "competitor_battlecard"}
+{"text": "What are the primary competitors for session replay in modern web apps?", "label": "competitor_battlecard"}
+{"text": "Does Resend offer better deliverability analytics than SendGrid?", "label": "competitor_battlecard"}
+{"text": "Compare Supabase Edge Functions with Cloudflare Workers.", "label": "competitor_battlecard"}
+{"text": "Is PostHog an all-in-one replacement for Mixpanel, LaunchDarkly, and Hotjar?", "label": "competitor_battlecard"}
+{"text": "What are the main drawbacks of choosing this product over the market leader?", "label": "competitor_battlecard"}

@@ -1,0 +1,43 @@
+{
+  "system": {
+    "cpu": "AMD64 Family 25 Model 80 Stepping 0, AuthenticAMD",
+    "torch_threads": 6,
+    "platform": "Windows-11-10.0.26200-SP0"
+  },
+  "router_quality": {
+    "n_samples": 140,
+    "n_splits": 5,
+    "mean_accuracy": 0.9857,
+    "mean_macro_f1": 0.9857,
+    "fold_accuracies": [
+      1.0,
+      0.9643,
+      1.0,
+      0.9643,
+      1.0
+    ],
+    "fold_f1s": [
+      1.0,
+      0.9642,
+      1.0,
+      0.9642,
+      1.0
+    ]
+  },
+  "router_latency": {
+    "iterations": 200,
+    "embed_p50_ms": 19.93,
+    "embed_p95_ms": 24.71,
+    "clf_p50_ms": 0.6,
+    "clf_p95_ms": 0.75,
+    "total_p50_ms": 20.56,
+    "total_p95_ms": 25.25
+  },
+  "grader_latency": {
+    "iterations": 200,
+    "pairs_per_call": 25,
+    "grader_p50_ms": 964.68,
+    "grader_p95_ms": 1142.97
+  },
+  "timestamp": "2026-10-15T17:21:08Z"
+}

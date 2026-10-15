@@ -10,3 +10,5 @@ ddgs
 slowapi
 python-dotenv
 pytest
+scikit-learn
+sentence-transformers

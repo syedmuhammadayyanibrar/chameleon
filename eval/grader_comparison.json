@@ -1,0 +1,212 @@
+{
+  "summary": {
+    "samples_evaluated": 5,
+    "agreement_count": 2,
+    "agreement_rate": 0.4,
+    "llm_mean_latency_ms": 4002.8,
+    "nli_mean_latency_ms": 6328.2,
+    "speedup_factor": 0.63,
+    "llm_total_cost_usd": 0.000662,
+    "nli_total_cost_usd": 0.0,
+    "disagreements": [
+      {
+        "domain": "resend.com",
+        "question": "How do I send an email with the API?",
+        "should_refuse": false,
+        "draft_answer": "To send an email with the API, you can use the following methods provided in the documentation:\n\n* **POST Send Email**: `https://resend.com/docs/api-reference/emails/send-email` [Source: https://resend.com/docs/api-reference/api-keys/list-api-keys]\n* **POST Send Batch Emails**: `https://resend.com/docs/api-reference/emails/send-batch-emails` [Source: https://resend.com/docs/api-reference/api-keys/list-api-keys]\n\nAdditionally, API keys used for sending must have the appropriate permissions (`full_access` or `sending_access`) [Source: https://resend.com/docs/api-reference/api-keys/create-api-key].",
+        "llm": {
+          "score": 1.0,
+          "grounded": true,
+          "latency_ms": 4757,
+          "cost_usd": 0.000232,
+          "unsupported": []
+        },
+        "nli": {
+          "score": 0.25,
+          "grounded": false,
+          "latency_ms": 25396,
+          "cost_usd": 0.0,
+          "min_claim_score": 0.0118,
+          "mean_entail": 0.1573,
+          "unsupported": [
+            "POST Send Email: https://resend.com/docs/api-reference/emails/send-email",
+            "POST Send Batch Emails: https://resend.com/docs/api-reference/emails/send-batch-emails",
+            "Additionally, API keys used for sending must have the appropriate permissions (fullaccess or sendingaccess)."
+          ]
+        },
+        "agreement": false
+      },
+      {
+        "domain": "posthog.com",
+        "question": "What is session replay?",
+        "should_refuse": false,
+        "draft_answer": "Session replay records what real users do in your product and plays it back like a DVR [Source: https://posthog.com/docs/session-replay]. It includes a synced DevTools panel that shows console logs, network requests, and errors at the exact moment they occurred [Source: https://posthog.com/docs/session-replay].",
+        "llm": {
+          "score": 1.0,
+          "grounded": true,
+          "latency_ms": 3463,
+          "cost_usd": 0.000146,
+          "unsupported": []
+        },
+        "nli": {
+          "score": 0.5,
+          "grounded": false,
+          "latency_ms": 2958,
+          "cost_usd": 0.0,
+          "min_claim_score": 0.011,
+          "mean_entail": 0.3881,
+          "unsupported": [
+            "Session replay records what real users do in your product and plays it back like a DVR."
+          ]
+        },
+        "agreement": false
+      },
+      {
+        "domain": "resend.com",
+        "question": "What is the CEO's favorite color?",
+        "should_refuse": true,
+        "draft_answer": "The provided context does not contain information about the CEO's favorite color.",
+        "llm": {
+          "score": 1.0,
+          "grounded": true,
+          "latency_ms": 5661,
+          "cost_usd": 9.7e-05,
+          "unsupported": []
+        },
+        "nli": {
+          "score": 0.0,
+          "grounded": false,
+          "latency_ms": 0,
+          "cost_usd": 0.0,
+          "min_claim_score": 0.0,
+          "mean_entail": 0.0,
+          "unsupported": []
+        },
+        "agreement": false
+      }
+    ]
+  },
+  "details": [
+    {
+      "domain": "resend.com",
+      "question": "How do I send an email with the API?",
+      "should_refuse": false,
+      "draft_answer": "To send an email with the API, you can use the following methods provided in the documentation:\n\n* **POST Send Email**: `https://resend.com/docs/api-reference/emails/send-email` [Source: https://resend.com/docs/api-reference/api-keys/list-api-keys]\n* **POST Send Batch Emails**: `https://resend.com/docs/api-reference/emails/send-batch-emails` [Source: https://resend.com/docs/api-reference/api-keys/list-api-keys]\n\nAdditionally, API keys used for sending must have the appropriate permissions (`full_access` or `sending_access`) [Source: https://resend.com/docs/api-reference/api-keys/create-api-key].",
+      "llm": {
+        "score": 1.0,
+        "grounded": true,
+        "latency_ms": 4757,
+        "cost_usd": 0.000232,
+        "unsupported": []
+      },
+      "nli": {
+        "score": 0.25,
+        "grounded": false,
+        "latency_ms": 25396,
+        "cost_usd": 0.0,
+        "min_claim_score": 0.0118,
+        "mean_entail": 0.1573,
+        "unsupported": [
+          "POST Send Email: https://resend.com/docs/api-reference/emails/send-email",
+          "POST Send Batch Emails: https://resend.com/docs/api-reference/emails/send-batch-emails",
+          "Additionally, API keys used for sending must have the appropriate permissions (fullaccess or sendingaccess)."
+        ]
+      },
+      "agreement": false
+    },
+    {
+      "domain": "resend.com",
+      "question": "What is a domain in Resend used for?",
+      "should_refuse": false,
+      "draft_answer": "Based on the provided context, domains are used to ensure the deliverability of your emails [Source: https://resend.com/docs/introduction].",
+      "llm": {
+        "score": 1.0,
+        "grounded": true,
+        "latency_ms": 2528,
+        "cost_usd": 7.3e-05,
+        "unsupported": []
+      },
+      "nli": {
+        "score": 1.0,
+        "grounded": true,
+        "latency_ms": 853,
+        "cost_usd": 0.0,
+        "min_claim_score": 0.9884,
+        "mean_entail": 0.9884,
+        "unsupported": []
+      },
+      "agreement": true
+    },
+    {
+      "domain": "supabase.com",
+      "question": "How does row level security work?",
+      "should_refuse": false,
+      "draft_answer": "Row Level Security (RLS) works by implementing granular authorization rules directly inside your Postgres database to secure data at the row level [Source: https://supabase.com/features/row-level-security]. It uses a combination of grants and policies to control access and secure your data [Source: https://supabase.com/docs/guides/database/postgres/row-level-security].",
+      "llm": {
+        "score": 1.0,
+        "grounded": true,
+        "latency_ms": 3605,
+        "cost_usd": 0.000114,
+        "unsupported": []
+      },
+      "nli": {
+        "score": 1.0,
+        "grounded": true,
+        "latency_ms": 2434,
+        "cost_usd": 0.0,
+        "min_claim_score": 0.9823,
+        "mean_entail": 0.9902,
+        "unsupported": []
+      },
+      "agreement": true
+    },
+    {
+      "domain": "posthog.com",
+      "question": "What is session replay?",
+      "should_refuse": false,
+      "draft_answer": "Session replay records what real users do in your product and plays it back like a DVR [Source: https://posthog.com/docs/session-replay]. It includes a synced DevTools panel that shows console logs, network requests, and errors at the exact moment they occurred [Source: https://posthog.com/docs/session-replay].",
+      "llm": {
+        "score": 1.0,
+        "grounded": true,
+        "latency_ms": 3463,
+        "cost_usd": 0.000146,
+        "unsupported": []
+      },
+      "nli": {
+        "score": 0.5,
+        "grounded": false,
+        "latency_ms": 2958,
+        "cost_usd": 0.0,
+        "min_claim_score": 0.011,
+        "mean_entail": 0.3881,
+        "unsupported": [
+          "Session replay records what real users do in your product and plays it back like a DVR."
+        ]
+      },
+      "agreement": false
+    },
+    {
+      "domain": "resend.com",
+      "question": "What is the CEO's favorite color?",
+      "should_refuse": true,
+      "draft_answer": "The provided context does not contain information about the CEO's favorite color.",
+      "llm": {
+        "score": 1.0,
+        "grounded": true,
+        "latency_ms": 5661,
+        "cost_usd": 9.7e-05,
+        "unsupported": []
+      },
+      "nli": {
+        "score": 0.0,
+        "grounded": false,
+        "latency_ms": 0,
+        "cost_usd": 0.0,
+        "min_claim_score": 0.0,
+        "mean_entail": 0.0,
+        "unsupported": []
+      },
+      "agreement": false
+    }
+  ]
+}

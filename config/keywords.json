@@ -1,0 +1,9 @@
+{
+  "auth": ["auth", "login", "sso", "oauth", "jwt", "password", "session", "user", "mfa", "saml"],
+  "database": ["postgres", "rls", "sql", "migrations", "schema", "table", "query", "database", "orm", "index"],
+  "api": ["api", "rest", "graphql", "endpoints", "sdk", "methods", "client", "request", "routes"],
+  "events": ["webhooks", "realtime", "events", "pubsub", "channels", "broadcast", "listener"],
+  "deploy": ["deploy", "hosting", "cli", "config", "env", "docker", "ci", "cd", "cluster", "production"],
+  "billing": ["pricing", "limits", "quotas", "plans", "tier", "subscription", "cost", "enterprise"],
+  "quickstart": ["quickstart", "getting-started", "guide", "tutorial", "overview", "introduction", "setup"]
+}
