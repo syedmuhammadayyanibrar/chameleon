@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>chameleon</title>
+<style>
+  :root { --bg:#000; --fg:#ededed; --dim:#8a8a8a; --line:#1f1f1f; --accent:#7ee2a8; --warn:#e2a87e; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--fg); font: 16px/1.6 system-ui, -apple-system, "Segoe UI", sans-serif; }
+  a { color: var(--accent); }
+  .mono, label, .label { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--dim); }
+  header { display:flex; justify-content:space-between; align-items:center; padding: 24px 5vw; border-bottom: 1px solid var(--line); }
+  .wordmark { font-size: 18px; font-weight: 300; letter-spacing: .02em; }
+  section { padding: 12vh 5vw; border-bottom: 1px solid var(--line); }
+  .marker { margin-bottom: 40px; }
+  h1 { font-size: clamp(36px, 7vw, 88px); font-weight: 200; line-height: 1.05; letter-spacing: -.02em; max-width: 14em; }
+  .sub { margin: 24px 0 40px; color: var(--dim); max-width: 36em; }
+  .row { display:flex; gap: 12px; flex-wrap: wrap; align-items: flex-end; }
+  .field { display:flex; flex-direction:column; gap: 6px; }
+  input, select { background: #000; color: var(--fg); border: 1px solid var(--line); padding: 12px 14px; font: inherit; font-size: 15px; min-width: 0; }
+  input:focus, select:focus, button:focus-visible { outline: 1px solid var(--accent); }
+  button { background: transparent; color: var(--accent); border: 1px solid var(--accent); padding: 12px 22px; font: inherit; font-size: 12px; letter-spacing: .12em; text-transform: uppercase; cursor: pointer; }
+  button:disabled { opacity: .4; cursor: default; }
+  .msg { margin-top: 14px; color: var(--dim); font-size: 14px; min-height: 1.4em; }
+  .msg.err { color: var(--warn); }
+  .scroll { margin-top: 12vh; }
+  .ticker { margin-top: 10vh; overflow: hidden; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); white-space: nowrap; }
+  .ticker-track { display:inline-block; padding: 14px 0; animation: tick 60s linear infinite; }
+  .ticker-track span { margin-right: 56px; }
+  .ticker-track b { color: var(--accent); font-weight: 400; }
+  @keyframes tick { to { transform: translateX(-50%); } }
+  .demo { display:grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  .panel { border: 1px solid var(--line); padding: 24px; min-width: 0; }
+  .panel > .label { margin-bottom: 18px; display:block; }
+  .answer { margin-top: 24px; min-height: 120px; overflow-wrap: anywhere; }
+  .answer table { border-collapse: collapse; margin: 12px 0; font-size: 14px; display:block; overflow-x:auto; }
+  .answer th, .answer td { border: 1px solid var(--line); padding: 6px 10px; text-align:left; }
+  .answer p { margin-bottom: 12px; }
+  .answer.low { border-left: 2px solid var(--warn); padding-left: 16px; }
+  .empty { color: var(--dim); font-size: 14px; }
+  .trace-row { display:grid; grid-template-columns: 110px 70px 1fr; gap: 12px; padding: 12px 0; border-top: 1px solid var(--line); font-size: 13px; animation: fade .4s both; }
+  .trace-row .node { color: var(--fg); font-family: ui-monospace, Menlo, Consolas, monospace; }
+  .trace-row .detail { color: var(--dim); overflow-wrap: anywhere; }
+  .badge { display:inline-block; margin-left: 8px; padding: 1px 8px; border: 1px solid; font-size: 10px; letter-spacing: .1em; }
+  .badge.ok { color: var(--accent); } .badge.low { color: var(--warn); }
+  .totals { margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--line); }
+  .dot { display:inline-block; width:8px; height:8px; border-radius:50%; background: var(--accent); margin-right:8px; animation: pulse 1.2s infinite; vertical-align: middle; }
+  @keyframes pulse { 50% { opacity: .2; } }
+  @keyframes fade { from { opacity:0; transform: translateY(6px); } }
+  .reveal { opacity:0; transform: translateY(16px); transition: opacity .8s, transform .8s; }
+  .reveal.in { opacity:1; transform:none; }
+  .cols { display:grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-bottom: 64px; }
+  .card { border: 1px solid var(--line); padding: 24px; }
+  .card h3 { font-weight: 300; font-size: 24px; margin-bottom: 10px; }
+  .card p { color: var(--dim); font-size: 14px; }
+  .spec { margin-top: 18px; }
+  .spec div { display:flex; justify-content:space-between; gap: 12px; padding: 8px 0; border-top: 1px solid var(--line); font-size: 14px; }
+  .diagram { max-width: 100%; height: auto; }
+  .diagram text { fill: var(--fg); font: 12px ui-monospace, Menlo, Consolas, monospace; }
+  .diagram rect { fill: none; stroke: #444; }
+  .diagram path { stroke: var(--dim); fill: none; }
+  .diagram .loop { stroke: var(--accent); stroke-dasharray: 4 3; }
+  footer { padding: 8vh 5vw; color: var(--dim); font-size: 14px; }
+  @media (max-width: 900px) { .demo, .cols { grid-template-columns: 1fr; } .trace-row { grid-template-columns: 90px 60px 1fr; } }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .ticker-track, .dot, .trace-row { animation: none; }
+    .reveal { opacity:1; transform:none; transition:none; }
+  }
+</style>
+</head>
+<body>
+<header>
+  <span class="wordmark">chameleon</span>
+  <span class="mono">grounded answers / live trace</span>
+</header>
+
+<section id="hero">
+  <div class="marker mono">01 / 04</div>
+  <h1 class="reveal">Ask any startup's docs. Watch the agents think.</h1>
+  <p class="sub reveal">Paste a domain. Chameleon indexes the public site and docs, then answers through a small agent graph you can watch step by step.</p>
+  <div class="row reveal">
+    <div class="field"><label for="ing-domain">Domain</label><input id="ing-domain" placeholder="example.com" autocomplete="off"></div>
+    <div class="field"><label for="ing-key">Admin key</label><input id="ing-key" type="password" placeholder="kept in memory only" autocomplete="off"></div>
+    <button id="ing-btn">Ingest</button>
+  </div>
+  <p class="msg" id="ing-msg" role="status"></p>
+  <div class="ticker" aria-hidden="true"><div class="ticker-track mono" id="ticker"></div></div>
+  <div class="scroll mono">scroll &darr;</div>
+</section>
+
+<section id="demo">
+  <div class="marker mono">02 / 04</div>
+  <div class="demo">
+    <div class="panel reveal">
+      <span class="label">Ask</span>
+      <div class="field"><label for="company">Company</label><select id="company"></select></div>
+      <div class="field" style="margin-top:14px"><label for="question">Question</label><input id="question" maxlength="500" placeholder="How do I get started?"></div>
+      <div class="row" style="margin-top:14px"><button id="ask-btn">Ask</button></div>
+      <div class="msg" id="ask-msg" role="status"></div>
+      <div class="answer" id="answer"><p class="empty">Pick a company and ask a question.</p></div>
+    </div>
+    <div class="panel reveal">
+      <span class="label" id="trace-title">Agent trace</span>
+      <div id="trace"><p class="empty">The trace appears here as the agents work.</p></div>
+      <div class="totals mono" id="totals"></div>
+    </div>
+  </div>
+</section>
+
+<section id="how">
+  <div class="marker mono">03 / 04</div>
+  <div class="cols">
+    <div class="card reveal"><h3>Grounded</h3><p>Answers cite the pages they came from, as inline links.</p></div>
+    <div class="card reveal"><h3>Observable</h3><p>Every step is traced with its latency and cost.</p></div>
+    <div class="card reveal"><h3>Safe to fail</h3><p>When the docs don't support an answer, it flags a human instead of guessing.</p></div>
+  </div>
+  <svg class="diagram reveal" viewBox="0 0 760 150" width="760" role="img" aria-label="router to retrieve to grade to finalize, with a rewrite loop from grade back to retrieve">
+    <rect x="10" y="50" width="110" height="40"/><text x="40" y="75">router</text>
+    <rect x="170" y="50" width="110" height="40"/><text x="195" y="75">retrieve</text>
+    <rect x="330" y="50" width="110" height="40"/><text x="362" y="75">grade</text>
+    <rect x="620" y="50" width="110" height="40"/><text x="645" y="75">finalize</text>
+    <rect x="250" y="110" width="110" height="36"/><text x="280" y="132">rewrite</text>
+    <path d="M120 70H170M280 70H330M440 70H620"/>
+    <path class="loop" d="M385 90V128H360M250 128H225V90"/>
+    <text x="480" y="62" style="fill:#8a8a8a">grounded (&ge; 0.75)</text>
+  </svg>
+</section>
+
+<section id="spec">
+  <div class="marker mono">04 / 04</div>
+  <div class="panel reveal" style="max-width:480px">
+    <span class="label">Selected company</span>
+    <div class="spec" id="spec-card">
+      <div><span class="label">Company</span><span id="sp-company">&ndash;</span></div>
+      <div><span class="label">Pages indexed</span><span id="sp-pages">&ndash;</span></div>
+      <div><span class="label">Chunks</span><span id="sp-chunks">&ndash;</span></div>
+      <div><span class="label">Status</span><span id="sp-status">&ndash;</span></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>Limitations: the groundedness score is an LLM-judge estimate; Chameleon indexes up to 15 public pages per company.</p>
+  <p style="margin-top:10px"><a href="#">GitHub</a> (placeholder)</p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/dompurify@3/dist/purify.min.js"></script>
+<script>
+const API_BASE = "";   // same origin by default; set to e.g. "https://my-api.example.com" if hosted separately
+const $ = id => document.getElementById(id);
+let companies = [];
+let es = null;
+let adminKey = "";  // never persisted
+
+if (window.DOMPurify) DOMPurify.addHook("afterSanitizeAttributes", n => {
+  if (n.tagName === "A") { n.setAttribute("target", "_blank"); n.setAttribute("rel", "noopener noreferrer"); }
+});
+
+function renderMarkdown(md) {
+  const withLinks = md.replace(/\[Source:\s*(https?:\/\/[^\]\s]+)\s*\]/g, "[source&nbsp;&#8599;]($1)");
+  return DOMPurify.sanitize(marked.parse(withLinks));
+}
+function say(el, text, err) { el.textContent = text; el.classList.toggle("err", !!err); }
+
+async function loadCompanies() {
+  try {
+    const r = await fetch(API_BASE + "/companies");
+    companies = await r.json();
+  } catch { companies = []; }
+  const sel = $("company"), prev = sel.value;
+  sel.innerHTML = "";
+  companies.forEach(c => sel.add(new Option(c.domain, c.domain)));
+  if (!companies.length) sel.add(new Option("no companies indexed yet", ""));
+  if (prev) sel.value = prev;
+  const items = companies.length
+    ? companies.map(c => `<span><b>${esc(c.domain)}</b> ${c.chunks} chunks${c.example ? " &middot; &ldquo;" + esc(c.example) + "&rdquo;" : ""}</span>`).join("")
+    : "<span>no companies indexed yet &middot; ingest one above</span>";
+  $("ticker").innerHTML = items + items;
+  updateSpec();
+}
+function esc(s) { return String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
+function updateSpec() {
+  const c = companies.find(x => x.domain === $("company").value);
+  $("sp-company").textContent = c ? c.domain : "–";
+  $("sp-pages").textContent = c ? c.pages : "–";
+  $("sp-chunks").textContent = c ? c.chunks : "–";
+  $("sp-status").textContent = c ? "Indexed" : "Empty";
+  if (c && !$("question").value) $("question").placeholder = c.example || "Ask anything";
+}
+$("company").addEventListener("change", updateSpec);
+
+$("ing-btn").addEventListener("click", async () => {
+  adminKey = $("ing-key").value;
+  const domain = $("ing-domain").value.trim();
+  const m = $("ing-msg");
+  if (!domain) return say(m, "Enter a domain to ingest.", true);
+  if (!adminKey) return say(m, "Enter the admin key.", true);
+  $("ing-btn").disabled = true;
+  say(m, "Indexing… this can take a minute.");
+  try {
+    const r = await fetch(API_BASE + "/ingest", {
+      method: "POST", headers: { "Content-Type": "application/json", "X-API-Key": adminKey },
+      body: JSON.stringify({ domain }),
+    });
+    if (r.status === 401) say(m, "That admin key was not accepted.", true);
+    else if (r.status === 429) say(m, "Ingest limit reached (5 per hour). Try again later.", true);
+    else if (!r.ok) say(m, "Ingestion failed. Check the domain and try again.", true);
+    else {
+      const d = await r.json();
+      say(m, `Indexed ${d.pages_indexed} pages (${d.pages_failed} failed), ${d.chunks} chunks.`);
+      await loadCompanies();
+      $("company").value = d.domain; updateSpec();
+    }
+  } catch { say(m, "Couldn't reach the server.", true); }
+  $("ing-btn").disabled = false;
+});
+
+function addRow(ev) {
+  const t = (ev.update && ev.update.telemetry && ev.update.telemetry[0]) || {};
+  const row = document.createElement("div"); row.className = "trace-row";
+  const node = document.createElement("span"); node.className = "node"; node.textContent = ev.node;
+  const ms = document.createElement("span"); ms.className = "mono"; ms.textContent = (t.ms ?? ev.elapsed_ms) + " ms";
+  const d = document.createElement("span"); d.className = "detail"; d.textContent = t.detail || "";
+  if (ev.node === "grader" && ev.update && typeof ev.update.grounding_score === "number") {
+    const ok = ev.update.grounding_score >= 0.75;
+    const b = document.createElement("span"); b.className = "badge " + (ok ? "ok" : "low");
+    b.textContent = ok ? "GROUNDED" : "LOW";
+    d.appendChild(b);
+  }
+  row.append(node, ms, d);
+  $("trace").appendChild(row);
+}
+
+function ask() {
+  const domain = $("company").value, q = $("question").value.trim();
+  const m = $("ask-msg");
+  if (!domain) return say(m, "No company is indexed yet. Ingest one first.", true);
+  if (q.length < 3) return say(m, "Type a question (at least 3 characters).", true);
+  if (es) es.close();
+  say(m, "");
+  $("trace").innerHTML = ""; $("totals").textContent = "";
+  $("answer").className = "answer"; $("answer").innerHTML = '<p class="empty">Thinking…</p>';
+  $("trace-title").innerHTML = '<span class="dot"></span>Agent trace';
+  $("ask-btn").disabled = true;
+  let cost = 0, finished = false;
+  const stop = () => { finished = true; es.close(); $("ask-btn").disabled = false; $("trace-title").textContent = "Agent trace"; };
+  es = new EventSource(`${API_BASE}/stream?domain=${encodeURIComponent(domain)}&query=${encodeURIComponent(q)}`);
+  es.onmessage = e => {
+    const ev = JSON.parse(e.data);
+    if (ev.node === "__done__") {
+      $("totals").textContent = `Total latency ${ev.elapsed_ms} ms · Total cost $${cost.toFixed(5)}`;
+      return stop();
+    }
+    if (ev.node === "__error__") {
+      say(m, "Something went wrong while answering (" + ev.message + "). Please try again.", true);
+      $("answer").innerHTML = '<p class="empty">No answer.</p>';
+      return stop();
+    }
+    ((ev.update && ev.update.telemetry) || []).forEach(t => cost += t.cost_usd || 0);
+    addRow(ev);
+    if (ev.node === "finalize" && ev.update.final_answer) {
+      const a = ev.update.final_answer;
+      $("answer").className = "answer" + (a.startsWith("Confidence low") ? " low" : "");
+      $("answer").innerHTML = renderMarkdown(a);
+    }
+  };
+  es.onerror = () => {
+    if (finished) return;
+    say(m, "Couldn't get an answer. You may have hit the rate limit (10 questions/min), or the company isn't indexed. Try again shortly.", true);
+    $("answer").innerHTML = '<p class="empty">No answer.</p>';
+    stop();
+  };
+}
+$("ask-btn").addEventListener("click", ask);
+$("question").addEventListener("keydown", e => { if (e.key === "Enter") ask(); });
+
+const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } }), { threshold: .1 });
+document.querySelectorAll(".reveal").forEach(el => io.observe(el));
+loadCompanies();
+</script>
+</body>
+</html>

@@ -1,0 +1,6 @@
+{"domain": "resend.com", "question": "How do I send an email with the API?", "expect_any": ["api", "send"], "should_refuse": false}
+{"domain": "resend.com", "question": "What is a domain in Resend used for?", "expect_any": ["domain", "dns", "verify"], "should_refuse": false}
+{"domain": "supabase.com", "question": "How does row level security work?", "expect_any": ["row level security", "rls", "polic"], "should_refuse": false}
+{"domain": "posthog.com", "question": "What is session replay?", "expect_any": ["session", "replay", "recording"], "should_refuse": false}
+{"domain": "resend.com", "question": "What is the CEO's favorite color?", "expect_any": [], "should_refuse": true}
+{"domain": "supabase.com", "question": "What was Supabase's exact revenue in 2019?", "expect_any": [], "should_refuse": true}

@@ -1,0 +1,84 @@
+{
+  "summary": {
+    "answerable_correct_pct": 100.0,
+    "unanswerable_refused_pct": 100.0,
+    "avg_retries": 0.0
+  },
+  "results": [
+    {
+      "domain": "resend.com",
+      "question": "How do I send an email with the API?",
+      "expect_any": [
+        "api",
+        "send"
+      ],
+      "should_refuse": false,
+      "ok": true,
+      "retries": 0,
+      "score": 1.0,
+      "answer": "To send an email with the API, you can use the following endpoint:\n\n* **POST Send Email** [Source: https://resend.com/docs/api-reference/api-keys/create-api-key]"
+    },
+    {
+      "domain": "resend.com",
+      "question": "What is a domain in Resend used for?",
+      "expect_any": [
+        "domain",
+        "dns",
+        "verify"
+      ],
+      "should_refuse": false,
+      "ok": true,
+      "retries": 0,
+      "score": 1.0,
+      "answer": "A domain in Resend is used to ensure the deliverability of your emails [Source: https://resend.com/docs/introduction]."
+    },
+    {
+      "domain": "supabase.com",
+      "question": "How does row level security work?",
+      "expect_any": [
+        "row level security",
+        "rls",
+        "polic"
+      ],
+      "should_refuse": false,
+      "ok": true,
+      "retries": 0,
+      "score": 1.0,
+      "answer": "Based on the provided context, Postgres Row Level Security (RLS) gives you granular authorization rules that run inside the database [Source: https://supabase.com/docs/guides/database/postgres/row-level-security]. Grants and policies combine to control access [Source: https://supabase.com/docs/guides/database/postgres/row-level-security]."
+    },
+    {
+      "domain": "posthog.com",
+      "question": "What is session replay?",
+      "expect_any": [
+        "session",
+        "replay",
+        "recording"
+      ],
+      "should_refuse": false,
+      "ok": true,
+      "retries": 0,
+      "score": 1.0,
+      "answer": "Session replay records what real users do in your product and plays it back like a DVR, complete with a synced DevTools panel that displays console logs, network requests, and errors at the exact moment they occurred [Source: https://posthog.com/docs/session-replay]."
+    },
+    {
+      "domain": "resend.com",
+      "question": "What is the CEO's favorite color?",
+      "expect_any": [],
+      "should_refuse": true,
+      "ok": true,
+      "retries": 0,
+      "score": 1.0,
+      "answer": "The provided context does not contain information about the CEO's favorite color."
+    },
+    {
+      "domain": "supabase.com",
+      "question": "What was Supabase's exact revenue in 2019?",
+      "expect_any": [],
+      "should_refuse": true,
+      "ok": true,
+      "retries": 0,
+      "score": 1.0,
+      "answer": "The provided context does not contain information about Supabase's exact revenue in 2019."
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+fastapi
+uvicorn
+httpx
+chromadb
+langchain-text-splitters
+langchain-google-genai
+langgraph
+pydantic>=2
+ddgs
+slowapi
+python-dotenv
+pytest

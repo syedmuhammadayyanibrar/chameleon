@@ -1,0 +1,5 @@
+[
+  {"domain": "resend.com", "urls": ["https://resend.com/docs/introduction"], "example_question": "How do I send an email with the API?"},
+  {"domain": "supabase.com", "urls": ["https://supabase.com/docs/guides/database/postgres/row-level-security"], "example_question": "How does row level security work?"},
+  {"domain": "posthog.com", "urls": ["https://posthog.com/docs/session-replay"], "example_question": "What is session replay?"}
+]
